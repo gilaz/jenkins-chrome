@@ -1,0 +1,2 @@
+- [http://localhost:6080](http://localhost:6080) - Jenkins
+- [http://localhost:6081](http://localhost:6081) - Chrome agent VNC
