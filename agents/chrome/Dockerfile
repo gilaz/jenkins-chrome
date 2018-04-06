@@ -2,6 +2,8 @@ FROM dorowu/ubuntu-desktop-lxde-vnc
 
 ENV DEBIAN_FRONTEND noninteractive
 
+EXPOSE 80 81
+
 # Docker
 RUN \
   apt-get update && \
@@ -44,6 +46,8 @@ RUN \
   npm install -g yarn --quiet
 
 
+RUN \
+  apt-get install -y vim nano
 
 # Cleanup
 RUN \
@@ -54,7 +58,18 @@ RUN \
 
 
 # Define working directory.
-WORKDIR /data
+WORKDIR /app
+
+# Add user so we don't need --no-sandbox.
+RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video,sudo,docker pptruser \
+  && mkdir -p /home/pptruser/Downloads \
+  && chown -R pptruser:pptruser /home/pptruser \
+  && chown -R pptruser:pptruser /app
+
+# Fix sudo
+RUN chown root:root /usr/bin/sudo && chmod 4755 /usr/bin/sudo
+
+USER pptruser
 
 # Define default command.
 CMD ["bash"]
